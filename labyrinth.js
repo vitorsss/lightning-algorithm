@@ -95,16 +95,21 @@ class Labyrinth {
       { x: x + 1, y },
       { x, y: y - 1 },
       { x, y: y + 1 },
-    ].filter((position) => {
-      return (
-        !this.checkVisited(position) &&
-        this.canMoveTo({
-          ...position,
-          ox: x,
-          oy: y,
-        })
-      );
-    });
+    ]
+      .filter((position) => {
+        return (
+          !this.checkVisited(position) &&
+          this.canMoveTo({
+            ...position,
+            ox: x,
+            oy: y,
+          })
+        );
+      })
+      .map((position) => ({
+        ...position,
+        bottom: this._horizontalLines[position.x][position.y + 1],
+      }));
   }
 
   canMoveTo({ ox, oy, x, y }) {

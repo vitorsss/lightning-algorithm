@@ -26,9 +26,9 @@ class BreadthFirstSearch {
     }
     this._steps = [];
     let nextPositions = this._labyrinth.startPositions;
-    let maxDepth = 0;
+    let lastPosition;
     this._steps.push(nextPositions);
-    while (nextPositions.length && maxDepth != this._height - 1) {
+    while (nextPositions.length && !lastPosition) {
       nextPositions = Object.values(
         nextPositions.reduce((acc, position) => {
           acc[`${position.x}:${position.y}`] = position;
@@ -44,20 +44,22 @@ class BreadthFirstSearch {
           );
         }
       }
-      maxDepth = Math.max(
-        maxDepth,
-        nextPositions.reduce((acc, position) => Math.max(acc, position.y), 0),
+      const maxDepth = nextPositions.reduce(
+        (acc, position) => Math.max(acc, position.y),
+        0,
       );
+      if (maxDepth == this._height - 1) {
+        lastPosition = nextPositions.find((position) => {
+          return position.y == this._height - 1 && !position.bottom;
+        });
+      }
       this._steps.push(nextPositions);
     }
     nextPositions.forEach((position) =>
       this._labyrinth.visit({ ...position, step: this._steps.length }),
     );
-    if (maxDepth == this._height - 1) {
+    if (lastPosition) {
       const path = [];
-      let lastPosition = this._steps[this._steps.length - 1].find(
-        (position) => position.y == maxDepth,
-      );
       path[this._steps.length - 1] = lastPosition;
       for (let i = this._steps.length - 2; i >= 0; i--) {
         lastPosition = this._steps[i].find((position) =>

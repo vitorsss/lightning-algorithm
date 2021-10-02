@@ -1,2 +1,2 @@
-importScripts('labyrinth.js', 'algorithm.js');
+importScripts('labyrinth.js', 'step.js', 'algorithm.js');
 

@@ -77,4 +77,8 @@ class BreadthFirstSearch {
     }
     return this._solution;
   }
+
+  getSteps() {
+    return this._steps.map((positions) => new Step({ positions }));
+  }
 }

@@ -15,23 +15,27 @@
   let algorithm;
   let solution;
   let labyrinthShape;
-  do {
-    algorithm = new BreadthFirstSearch({
-      width: squares,
-      height: squares,
-      verticalProbability: 0.5,
-      horizontalProbability: 0.5,
-    });
-    solution = algorithm.findSolution();
-    labyrinthShape = algorithm.getLabyrinth();
-  } while (!solution || !solution.length);
+  let stepCount;
+  let steps;
+  function generateSolvableLabyrinth() {
+    stepCount = 0;
+    do {
+      algorithm = new BreadthFirstSearch({
+        width: squares,
+        height: squares,
+        verticalProbability: 0.5,
+        horizontalProbability: 0.5,
+      });
+      solution = algorithm.findSolution();
+      labyrinthShape = algorithm.getLabyrinth();
+    } while (!solution || !solution.length);
+    steps = algorithm.getSteps();
+  }
+  generateSolvableLabyrinth();
 
   const squareSize = (height - marging * 2) / squares;
 
-  const steps = algorithm.getSteps();
-
   let anim;
-  let stepCount = 0;
 
   function printLabyrinth(labyrinthShape) {
     for (let x = 0; x < labyrinthShape.width; x++) {
@@ -84,7 +88,7 @@
   }
 
   function printSolution(solution) {
-    for (const {x, y} of solution) {
+    for (const { x, y } of solution) {
       ctxSolution.fillStyle = 'rgb(255 248 117)';
       ctxSolution.fillRect(
         x * squareSize + ctxSolution.lineWidth,
@@ -112,6 +116,11 @@
     ctxSolution.translate(-squareSize, -squareSize);
     if (stepCount++ < steps.length + 21) {
       anim = window.requestAnimationFrame(play);
+    } else {
+      setTimeout(() => {
+        generateSolvableLabyrinth();
+        anim = window.requestAnimationFrame(play);
+      }, Math.random() * 500 + 200);
     }
   }
 

@@ -1,4 +1,10 @@
 canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+canvas#labyrinth {
   background: #111111;
   display: block;
 }
